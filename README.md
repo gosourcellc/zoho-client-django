@@ -2,6 +2,8 @@
 
 A modest Zoho CRM API client which will do the oAuth2 for you.
 
+## Usage
+
 ```python
  from zoho_client.zoho import ZohoClient
  client = ZohoClient()
@@ -21,17 +23,66 @@ A modest Zoho CRM API client which will do the oAuth2 for you.
 
 ```
 
-# setup
+# Setup
 
-generate the refresh token
+## ENV
 
-fetch the auth code:
+the package expects to have it's configuration in the settings.py:
+
+```python
+# read it from .env
+ZOHO_CLIENT_ID = env("ZOHO_CLIENT_ID")
+ZOHO_CLIENT_SECRET = env("ZOHO_CLIENT_SECRET")
+ZOHO_API_VERSION = "v2.1"
+# sandbox
+ZOHO_BASE_URL = "https://crmsandbox.zoho.com"
+# production
+# ZOHO_BASE_URL = "https://zohoapis.com"
+```
+
+and naturally, don't forget to include the app in your INSALLED_APS:
+
+```python
+INSTALLED_APPS = [
+    ...
+    "zoho_client",
+]
+
+```
+
+## Initilization of the client (one off)
+
+goto https://api-console.zoho.com/ :
+
+copy the client id and secret and save them in your django settings. the recommended way would be to save them as ENV variables.
+
+![step 1](images/01_zoho.png)
+
+generate an authorization code
 
 scope:
 ZohoCRM.modules.ALL,ZohoCRM.settings.ALL,ZohoCRM.users.ALL,ZohoCRM.bulk.ALL,ZohoCRM.notifications.ALL
 
+![step 2](images/02_zoho.png)
+
 choose either production or sandbox
+
+![step 3](images/03_zoho.png)
+
 press generate and copy the code and run this from the django console:
+![step 4](images/04_zoho.png)
+
+go to django admin to zoho_client/zoho_token and press the regenerate zoho oauth tokens
+
+![step 5](images/06_django_admin.png)
+
+paste the authorization code you have copied before
+
+![step 6](images/05_django_admin.png)
+
+you are good to go!
+
+### Programmatically:
 
 ```python
 from zoho_client.zoho import ZohoClient
