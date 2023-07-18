@@ -8,7 +8,7 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="zoho-client-django",
-    version="1.2.0",  # Update this for new versions
+    version="1.2.1",  # Update this for new versions
     description="Django app which is a client for the Zoho CRM API",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -20,7 +20,7 @@ setup(
         "zoho_client": ["templates/admin/zoho_client/zohotoken/*.html"],
     },
     install_requires=[
-        "Django>=4.2.3,<5.0",
+        "Django>=4.1,<5.0",
         "requests>=2.31.0,<3.0",
     ],
 )
