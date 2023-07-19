@@ -9,18 +9,29 @@ A modest Zoho CRM API client which will do the oAuth2 for you.
  client = ZohoClient()
  # GET all Sales_Orders
  res = client.make_request(api_endpoint="Sales_Orders")
- for sales_order in res['data']:
+ # res is an instance of requests.Response
+ for sales_order in res.json()['data']:
     print(f"sales order #{sales_order['id']}")
 
  # find the first record
- sales_order_id = res['data'][0]['id']
+ sales_order_id = res.json()['data'][0]['id']
 
  # update the sales order's subject
- payload = {'data': [ {'Subject': 'CHNAGED'}]}
- res = client.make_request(method='PUT', api_endpoint=f"Sales_Orders/{sales_order_id}", data=payload)
- print(res['data'][0]['status'])
+ payload = {'data': [ {'Subject': 'CHANGED'}]}
+ # the make_request accpet any kwargs which the requests.request() method accpets
+ res = client.make_request(method='PUT', api_endpoint=f"Sales_Orders/{sales_order_id}", json=payload)
+ print(res.json()['data'][0]['status'])
  # => success
 
+ # search for a record. the params are automatically encoded
+ res = client.make_request("GET", "Accounts/search", params= {"criteria": "(Account_Name:equals:Guy Moller)"})
+ print(f"found {resp.json()['info']['count']} records")
+
+ # create a record
+ account_data={'Account_Name': 'John Doe', 'Email': 'joe@example.com'}
+ res = client.make_request(method='POST', api_endpoint='Accounts',json={'data':[account_data]})
+ print(res.json()['data'][0]['details']['id'])
+ # => 5599334000006242002
 ```
 
 # Setup

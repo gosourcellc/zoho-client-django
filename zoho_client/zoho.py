@@ -1,4 +1,5 @@
 import requests
+from requests import Response
 from .models import ZohoToken
 from django.conf import settings
 
@@ -20,19 +21,19 @@ class ZohoClient:
             self.refresh_token = None
             self.access_token = None
 
-    def make_request(self, method="GET", api_endpoint=None, data=None):
+    def make_request(self, method="GET", api_endpoint=None, **kwargs) -> Response:
         if not self.access_token:
             self.refresh_access_token()
         url = f"{self.base_url}/crm/{self.api_version}/{api_endpoint}"
         print(url)
-        response = requests.request(method, url, headers=self.headers, json=data)
+        response = requests.request(method, url, headers=self.headers, **kwargs)
 
         # If the access token has expired, refresh it and try the request again
         if response.status_code == 401:
             self.refresh_access_token()
-            return self.make_request(method, api_endpoint, data)
+            return self.make_request(method, api_endpoint, **kwargs)
 
-        return response.json()
+        return response
 
     def refresh_access_token(self):
         data = {
